@@ -1,6 +1,6 @@
 export default async function handler(req: any, res: any) {
   // Simple health check - just verify API key is configured
-  const apiKey = process.env.ROBOFLOW_API_KEY || 'hFTl5s6IVgFqAXKmxfyj';
+  const apiKey = process.env.ROBOFLOW_API_KEY;
   let workflowUrl =
     process.env.ROBOFLOW_WORKFLOW_URL ||
     'https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic';

@@ -187,9 +187,12 @@ const MANDATORY_DISCLAIMER =
   'AI-generated assessment is intended to support professional inspection and does not replace assessment by a qualified structural engineer.';
 
 let aiClient: GoogleGenAI | null = null;
-function getAi(): GoogleGenAI | null {
-  const geminiKey = process.env.GEMINI_API_KEY || 'AIzaSyCwtgEjQGym37IAI1EovuZgQKWczg14zHE';
-  if (!aiClient && geminiKey) {
+function getAi(): GoogleGenAI {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey) {
+    throw new Error('GEMINI_API_KEY is not configured in server environment variables.');
+  }
+  if (!aiClient) {
     aiClient = new GoogleGenAI({
       apiKey: geminiKey,
       httpOptions: {

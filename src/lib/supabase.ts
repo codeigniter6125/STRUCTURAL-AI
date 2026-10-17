@@ -2,11 +2,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Public frontend Supabase configuration using Vite environment variables
 // Sourced from VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
-export const SUPABASE_URL: string =
-  import.meta.env.VITE_SUPABASE_URL || 'https://dsoxqjkjujcmqxikzxdd.supabase.co';
+export const SUPABASE_URL: string = import.meta.env.VITE_SUPABASE_URL || '';
 
-export const SUPABASE_ANON_KEY: string =
-  import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_-peCUvZj6xxyspvktIMdvQ_HI5h6I5t';
+export const SUPABASE_ANON_KEY: string = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 // Evaluate Supabase configuration state from active frontend values
 export const isSupabaseConfigured: boolean = Boolean(
@@ -18,9 +16,10 @@ export const isSupabaseConfigured: boolean = Boolean(
 );
 
 // Supabase client instance initialized with frontend publishable/anon credentials
+// Uses dummy placeholder URL/key when unconfigured so module import succeeds while isSupabaseConfigured flags state
 export const supabase: SupabaseClient = createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
+  SUPABASE_URL || 'https://placeholder.supabase.co',
+  SUPABASE_ANON_KEY || 'placeholder-anon-key',
   {
     auth: {
       persistSession: true,

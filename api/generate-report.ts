@@ -13,6 +13,13 @@ export default async function handler(req: any, res: any) {
     });
   }
 
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({
+      error: 'GEMINI_API_KEY is not configured in server environment variables.',
+      configured: false,
+    });
+  }
+
   try {
     const report = await generateForensicReport({
       building,

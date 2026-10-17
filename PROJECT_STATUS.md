@@ -31,21 +31,21 @@
 
 Set these in your **Vercel Project Settings &rarr; Environment Variables**:
 
-| Variable Name | Environment | Description / Fallback |
+| Variable Name | Environment | Purpose / Notes |
 | :--- | :--- | :--- |
-| `ROBOFLOW_API_KEY` | Server (Production, Preview, Dev) | `hFTl5s6IVgFqAXKmxfyj` |
+| `ROBOFLOW_API_KEY` | Server (Production, Preview, Dev) | Private Roboflow Serverless API Key (Set in env variables) |
 | `ROBOFLOW_WORKFLOW_URL` | Server (Optional) | `https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic` |
-| `GEMINI_API_KEY` | Server (Production, Preview, Dev) | `AIzaSyCwtgEjQGym37IAI1EovuZgQKWczg14zHE` |
-| `VITE_SUPABASE_URL` | Frontend (Build & Runtime) | `https://dsoxqjkjujcmqxikzxdd.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | Frontend (Build & Runtime) | `sb_publishable_-peCUvZj6xxyspvktIMdvQ_HI5h6I5t` |
+| `GEMINI_API_KEY` | Server (Production, Preview, Dev) | Google Gemini API Key for forensic reporting (Set in env variables) |
+| `VITE_SUPABASE_URL` | Frontend (Build & Runtime) | Supabase project URL (`https://<project-ref>.supabase.co`) |
+| `VITE_SUPABASE_ANON_KEY` | Frontend (Build & Runtime) | Supabase publishable anon key (Protected by RLS) |
 
-*Note: Never expose `ROBOFLOW_API_KEY` or `GEMINI_API_KEY` with a `VITE_` prefix on the client.*
+*Note: Never expose `ROBOFLOW_API_KEY` or `GEMINI_API_KEY` with a `VITE_` prefix on the client. All backend keys must be set exclusively in server environment variables.*
 
 ---
 
 ## 5. Required Supabase Authentication Settings
 
-*(These settings must be verified in the **Supabase Dashboard** for project `dsoxqjkjujcmqxikzxdd`)*:
+*(These settings must be verified in your **Supabase Dashboard**)*:
 
 1. **Authentication &rarr; Providers &rarr; Email**:
    - **Enable Email provider**: `Enabled`

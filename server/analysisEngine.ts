@@ -418,7 +418,10 @@ export async function executeRoboflowWorkflow(
   imageData: string,
   elementName: string = 'Primary Structural Member'
 ): Promise<AnalysisResponse> {
-  const apiKey = process.env.ROBOFLOW_API_KEY || 'hFTl5s6IVgFqAXKmxfyj';
+  const apiKey = process.env.ROBOFLOW_API_KEY;
+  if (!apiKey) {
+    throw new Error('ROBOFLOW_API_KEY is not configured in server environment variables.');
+  }
   const workflowUrl =
     process.env.ROBOFLOW_WORKFLOW_URL ||
     'https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic';

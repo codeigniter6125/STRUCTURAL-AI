@@ -1,5 +1,5 @@
-// TODO: Move Roboflow authentication server-side after hackathon.
-// Client-side key is intentionally used for the SIH MVP.
+// Roboflow workflow execution is handled server-side via /api/roboflow/proxy
+// to protect credentials from client-side exposure.
 
 import { Defect, Inspection } from '../types';
 import { supabase, isSupabaseConfigured } from './supabase';
@@ -7,7 +7,7 @@ import { supabase, isSupabaseConfigured } from './supabase';
 export const ROBOFLOW_WORKFLOW_URL =
   'https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic';
 
-export const ROBOFLOW_API_KEY = 'hFTl5s6IVgFqAXKmxfyj';
+export const ROBOFLOW_API_KEY = '';
 
 export interface ClientRoboflowAnalysisResult {
   success: boolean;

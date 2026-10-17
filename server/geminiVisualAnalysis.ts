@@ -6,9 +6,12 @@ dotenv.config();
 
 let aiClient: GoogleGenAI | null = null;
 
-function getAiClient(): GoogleGenAI | null {
-  const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyCwtgEjQGym37IAI1EovuZgQKWczg14zHE';
-  if (!aiClient && apiKey) {
+function getAiClient(): GoogleGenAI {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is not configured in server environment variables.');
+  }
+  if (!aiClient) {
     aiClient = new GoogleGenAI({
       apiKey,
       httpOptions: {

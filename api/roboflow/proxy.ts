@@ -7,7 +7,7 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
-  const apiKey = process.env.ROBOFLOW_API_KEY || 'hFTl5s6IVgFqAXKmxfyj';
+  const apiKey = process.env.ROBOFLOW_API_KEY;
   let workflowUrl = process.env.ROBOFLOW_WORKFLOW_URL || 'https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic';
   if (workflowUrl && !workflowUrl.startsWith('http://') && !workflowUrl.startsWith('https://')) {
     workflowUrl = `https://serverless.roboflow.com/kumar-ritovash/workflows/${workflowUrl}`;

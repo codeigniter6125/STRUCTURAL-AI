@@ -1,0 +1,10 @@
+{
+  "name": "StructuralAI - Infrastructure Health & Defect Intelligence",
+  "description": "Indian infrastructure defect detection, risk monitoring, and IS 456 compliance inspection platform with real-time AI computer vision and Supabase authentication.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -32,6 +32,37 @@ import {
   Building2,
   Sparkles,
 } from 'lucide-react';
+import {
+  researchDefect,
+  type ResearchTopic,
+} from "../../lib/tinyfish";
+const toResearchDefectType = (raw: string): string | null => {
+  const value = raw.toLowerCase().replace(/[_-]+/g, " ");
+
+  if (/\bcrack\b/.test(value)) return "crack";
+  if (/\bspall(ing)?\b/.test(value)) return "spalling";
+  if (/\bcorrosion\b/.test(value)) return "corrosion";
+  if (/\befflorescence\b/.test(value)) return "efflorescence";
+  if (/\bexposed rebar\b/.test(value)) return "exposed rebar";
+
+  // Do not silently label unsupported defect classes as another defect.
+  return null;
+};
+
+const toResearchElement = (raw: string): string | undefined => {
+  const value = raw.toLowerCase();
+
+  if (/\bcolumn\b/.test(value)) return "column";
+  if (/\bbeam\b/.test(value)) return "beam";
+  if (/\bslab\b/.test(value)) return "slab";
+  if (/\bwall\b/.test(value)) return "wall";
+  if (/\bfoundation\b/.test(value)) return "foundation";
+  if (/\bfooting\b/.test(value)) return "footing";
+
+  // If no recognized element is found, the backend uses its RCC member default.
+  return undefined;
+};
+
 
 interface NewInspectionViewProps {
   buildings: Building[];
@@ -112,6 +143,20 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
   const [savedInspection, setSavedInspection] = useState<Inspection | null>(null);
 
   const currentBuilding = buildings.find((b) => b.id === selectedBuildingId) || buildings[0];
+    const selectedDefect =
+    analysisResult?.defects.find((defect) => defect.id === selectedDefectId) ??
+    analysisResult?.defects[0] ??
+    null;
+
+    const [researchTopic, setResearchTopic] =
+    useState<ResearchTopic>("repair_guidance");
+  const [isResearching, setIsResearching] = useState(false);
+  const [researchError, setResearchError] = useState<string | null>(null);
+  const [researchResponse, setResearchResponse] =
+    useState<Awaited<ReturnType<typeof researchDefect>> | null>(null);
+  const [researchForDefectId, setResearchForDefectId] =
+    useState<string | null>(null);
+
 
   // Test server-side Roboflow proxy endpoint
   const pingRoboflowWorkflow = async () => {
@@ -390,6 +435,61 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
       setScanStep('');
     }
   };
+    const handleResearchSelectedDefect = async () => {
+    if (!selectedDefect) {
+      setResearchError("Run an inspection and select a defect first.");
+      return;
+    }
+
+    const defectType = toResearchDefectType(selectedDefect.type);
+    if (!defectType) {
+      setResearchError(
+        `Research is not configured for "${selectedDefect.type}".`
+      );
+      return;
+    }
+
+    setIsResearching(true);
+    setResearchError(null);
+    setResearchResponse(null);
+    setResearchForDefectId(null);
+
+    try {
+      const response = await researchDefect({
+        topic: researchTopic,
+        defectType,
+        element: toResearchElement(selectedElement),
+        location:
+          researchTopic === "material_rates"
+            ? currentBuilding?.city
+            : undefined,
+      });
+
+      // The supplied backend currently needs a fix to return failures correctly.
+      // This check prevents the UI treating a failed run as a success.
+      if (
+        response.ok !== true ||
+        response.status !== "COMPLETED" ||
+        !response.result
+      ) {
+        throw new Error(
+          `Research did not complete successfully (status: ${
+            response.status ?? "unknown"
+          }).`
+        );
+      }
+
+      setResearchResponse(response);
+      setResearchForDefectId(selectedDefect.id);
+    } catch (error) {
+      setResearchError(
+        error instanceof Error ? error.message : "TinyFish research failed."
+      );
+    } finally {
+      setIsResearching(false);
+    }
+  };
+
 
   // Save inspection to Supabase
   const handleSaveInspection = () => {
@@ -1093,6 +1193,66 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
                     />
                   ))}
                 </div>
+              )}
+              {analysisResult && selectedDefect && (
+                <section className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-900">
+                      Reference Research
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Research for{" "}
+                      <strong>{selectedDefect.type}</strong>. Verify standards,
+                      repair advice, and prices against authoritative sources
+                      and with a qualified professional.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <select
+                      value={researchTopic}
+                      onChange={(event) =>
+                        setResearchTopic(event.target.value as ResearchTopic)
+                      }
+                      disabled={isResearching}
+                      aria-label="Research type"
+                      className="px-3 py-2 rounded-lg border border-slate-300 text-sm"
+                    >
+                      <option value="repair_guidance">Repair guidance</option>
+                      <option value="code_lookup">Code lookup</option>
+                      <option value="material_rates">Material rates</option>
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => void handleResearchSelectedDefect()}
+                      disabled={isResearching}
+                      className="px-4 py-2 rounded-lg bg-blue-700 text-white text-sm font-semibold disabled:opacity-50"
+                    >
+                      {isResearching
+                        ? "Researching…"
+                        : "Research selected defect"}
+                    </button>
+                  </div>
+
+                  {researchError && (
+                    <p role="alert" className="text-sm text-red-700">
+                      {researchError}
+                    </p>
+                  )}
+
+                  {researchResponse &&
+                    researchForDefectId === selectedDefect.id && (
+                      <div aria-live="polite">
+                        <p className="text-xs text-slate-600">
+                          {researchResponse.note}
+                        </p>
+                        <pre className="mt-2 max-h-80 overflow-auto whitespace-pre-wrap rounded-lg bg-slate-950 p-3 text-xs text-slate-100">
+                          {JSON.stringify(researchResponse.result, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                </section>
               )}
 
               {/* Action Bar: Save & Generate Report */}

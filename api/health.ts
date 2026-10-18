@@ -7,5 +7,6 @@ export default function handler(_req: any, res: any) {
     roboflowEndpoint: 'https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic',
     roboflowConfigured: Boolean(process.env.ROBOFLOW_API_KEY),
     geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
+    tinyfishConfigured: Boolean(process.env.TINYFISH_API_KEY),
   });
 }

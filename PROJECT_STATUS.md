@@ -36,10 +36,11 @@ Set these in your **Vercel Project Settings &rarr; Environment Variables**:
 | `ROBOFLOW_API_KEY` | Server (Production, Preview, Dev) | Private Roboflow Serverless API Key (Set in env variables) |
 | `ROBOFLOW_WORKFLOW_URL` | Server (Optional) | `https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic` |
 | `GEMINI_API_KEY` | Server (Production, Preview, Dev) | Google Gemini API Key for forensic reporting (Set in env variables) |
+| `TINYFISH_API_KEY` | Server (Production, Preview, Dev) | TinyFish Web Agent API Key for live defect reference research |
 | `VITE_SUPABASE_URL` | Frontend (Build & Runtime) | Supabase project URL (`https://<project-ref>.supabase.co`) |
 | `VITE_SUPABASE_ANON_KEY` | Frontend (Build & Runtime) | Supabase publishable anon key (Protected by RLS) |
 
-*Note: Never expose `ROBOFLOW_API_KEY` or `GEMINI_API_KEY` with a `VITE_` prefix on the client. All backend keys must be set exclusively in server environment variables.*
+*Note: Never expose `ROBOFLOW_API_KEY`, `GEMINI_API_KEY`, or `TINYFISH_API_KEY` with a `VITE_` prefix on the client. All backend keys must be set exclusively in server environment variables.*
 
 ---
 

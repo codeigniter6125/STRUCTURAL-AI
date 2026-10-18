@@ -11,6 +11,7 @@ import roboflowProxyHandler from "./api/roboflow/proxy";
 import generateReportHandler from "./api/generate-report";
 import telemetryHandler from "./api/telemetry";
 import healthHandler from "./api/health";
+import tinyFishResearchHandler from "./api/tinyfish-research";
 
 dotenv.config();
 
@@ -35,6 +36,9 @@ async function startServer() {
   app.post("/api/generate-report", (req: Request, res: Response) => generateReportHandler(req, res));
   app.get("/api/telemetry", (req: Request, res: Response) => telemetryHandler(req, res));
   app.post("/api/telemetry", (req: Request, res: Response) => telemetryHandler(req, res));
+  app.post("/api/tinyfish-research", (req: Request, res: Response, next) => {
+    void tinyFishResearchHandler(req, res).catch(next);
+  });
 
   // In development, hook into Vite development server
   if (process.env.NODE_ENV !== "production") {

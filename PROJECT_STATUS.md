@@ -37,6 +37,8 @@ Set these in your **Vercel Project Settings &rarr; Environment Variables**:
 | `ROBOFLOW_WORKFLOW_URL` | Server (Optional) | `https://serverless.roboflow.com/kumar-ritovash/workflows/building-infrastructure-defects-logic` |
 | `GEMINI_API_KEY` | Server (Production, Preview, Dev) | Google Gemini API Key for forensic reporting (Set in env variables) |
 | `TINYFISH_API_KEY` | Server (Production, Preview, Dev) | TinyFish Web Agent API Key for live defect reference research |
+| `SUPABASE_URL` | Server (Production, Preview, Dev) | Server-side Supabase URL for JWT verification in `/api/tinyfish-research` |
+| `SUPABASE_ANON_KEY` | Server (Production, Preview, Dev) | Server-side Supabase Anon Key for JWT verification in `/api/tinyfish-research` |
 | `VITE_SUPABASE_URL` | Frontend (Build & Runtime) | Supabase project URL (`https://<project-ref>.supabase.co`) |
 | `VITE_SUPABASE_ANON_KEY` | Frontend (Build & Runtime) | Supabase publishable anon key (Protected by RLS) |
 

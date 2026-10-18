@@ -455,6 +455,7 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
     setResearchForDefectId(null);
 
     try {
+      // researchDefect now handles async polling internally and throws on failure.
       const response = await researchDefect({
         topic: researchTopic,
         defectType,
@@ -465,18 +466,8 @@ export const NewInspectionView: React.FC<NewInspectionViewProps> = ({
             : undefined,
       });
 
-      // The supplied backend currently needs a fix to return failures correctly.
-      // This check prevents the UI treating a failed run as a success.
-      if (
-        response.ok !== true ||
-        response.status !== "COMPLETED" ||
-        !response.result
-      ) {
-        throw new Error(
-          `Research did not complete successfully (status: ${
-            response.status ?? "unknown"
-          }).`
-        );
+      if (!response.result) {
+        throw new Error("Research completed but returned no data. Please try again.");
       }
 
       setResearchResponse(response);

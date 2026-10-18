@@ -12,6 +12,7 @@ import generateReportHandler from "./api/generate-report";
 import telemetryHandler from "./api/telemetry";
 import healthHandler from "./api/health";
 import tinyFishResearchHandler from "./api/tinyfish-research";
+import tinyFishPollHandler from "./api/tinyfish-poll";
 
 dotenv.config();
 
@@ -38,6 +39,9 @@ async function startServer() {
   app.post("/api/telemetry", (req: Request, res: Response) => telemetryHandler(req, res));
   app.post("/api/tinyfish-research", (req: Request, res: Response, next) => {
     void tinyFishResearchHandler(req, res).catch(next);
+  });
+  app.get("/api/tinyfish-poll", (req: Request, res: Response, next) => {
+    void tinyFishPollHandler(req, res).catch(next);
   });
 
   // In development, hook into Vite development server
